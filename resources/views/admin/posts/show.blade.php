@@ -4,7 +4,8 @@
     <div class="container">
         <h1 class="mb-5">{{ $post->title }}</h1>
 
-        <div class="mb-5">
+        <div class="mb-3">
+            <p>Category: @if($post->category){{$post->category->name}} @else Uncategorized @endif</p>
             <a class="btn btn-success" href="{{ route('admin.posts.edit', $post->id) }}">Edit this post</a>
             <a class="btn btn-warning" href="{{ route('admin.posts.index') }}">Back to archive</a>
         </div>
