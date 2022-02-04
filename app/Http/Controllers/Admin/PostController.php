@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
 use App\Category;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -18,9 +19,9 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        dump($posts);
+        $tags = Tag::all();
 
-        return view('admin.posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts', 'tags'));
     }
 
     /**
@@ -31,8 +32,11 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories', 'tags'));
+
+
     }
 
     /**
@@ -54,7 +58,7 @@ class PostController extends Controller
         $request->validate($this->validate_rules(), $this->validate_messages());
 
         $data = $request->all();
-        dump($data);
+        //dd($data);
 
         $new_post = new Post; 
 
@@ -72,6 +76,10 @@ class PostController extends Controller
         
         $new_post->save();
 
+        if(array_key_exists('tags', $data)){
+            $new_post->tags()->attach($data['tags']);
+        }
+
         return redirect()->route('admin.posts.show', $new_post->slug);
         
     }
@@ -86,7 +94,7 @@ class PostController extends Controller
     {
         $post = Post::where('slug', $slug)->first();
 
-        dump($post->category);
+        //dump($post->category);
 
         if(! $post){
             abort(404);
@@ -105,12 +113,13 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $categories = Category::all();
+        $tags = Tag::all();
 
         if(! $post){
             abort(404);
         }
 
-        return view('admin.posts.edit', compact('post', 'categories'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -154,6 +163,12 @@ class PostController extends Controller
         
         $post->update($data);
 
+        if(array_key_exists('tags', $data)){
+            $post->tags()->sync($data['tags']);
+        }else{
+            $post->tags()->detach();
+        }
+
         return redirect()->route('admin.posts.show', $post->slug);
     }
 
@@ -177,7 +192,8 @@ class PostController extends Controller
         return [
             'title' => 'required|max:255',
             'content' => 'required',
-            'category_id'=> 'nullable|exists:categories,id'
+            'category_id'=> 'nullable|exists:categories,id',
+            'tags'=> 'nullable|exists:tags,id'
         ];
     }
 

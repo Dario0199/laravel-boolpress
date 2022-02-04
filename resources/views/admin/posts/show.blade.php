@@ -19,6 +19,13 @@
             </div>
         </div>
         
-       
+        @if (!$post->tags->isEmpty())
+            <h3>Tags:</h3>
+            @foreach ($post->tags as $tag)
+                <p class="badge badge-primary">{{ $tag->name }}</p>
+            @endforeach
+        @else
+            <p>No tags for this post</p>
+        @endif
     </div>    
 @endsection

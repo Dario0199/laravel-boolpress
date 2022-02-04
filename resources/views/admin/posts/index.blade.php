@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container mb-5">
         <h1>posts</h1>
         
         @if (session('deleted'))
@@ -56,5 +56,25 @@
                 </tbody>
             </table>
         @endif
-    </div>    
+    </div>  
+    
+    <div class="container">
+        <h2>Posts by Tag</h2>
+        @foreach ($tags as $tag)
+            <h3>{{ $tag->name }}</h3>
+
+            @if ($tag->posts->isEmpty())
+                <p>No post for this tag</p>
+            @else
+                <ul>
+                    @foreach ($tag->posts as $post)
+                        <li>
+                            <a href="{{ route('admin.posts.show', $post->slug) }}">{{ $post->title }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+
+        @endforeach
+    </div>
 @endsection
