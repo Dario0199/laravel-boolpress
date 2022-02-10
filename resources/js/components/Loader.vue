@@ -1,12 +1,15 @@
 <template>
   <h2>
-      LOAD PAGE...
+      {{ text }}
   </h2>
 </template>
 
 <script>
 export default {
     name: 'Loader',
+    props: {
+      text: String,
+    }
 }
 </script>
 

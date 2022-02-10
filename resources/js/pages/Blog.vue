@@ -7,6 +7,7 @@
               <h2>{{ post.title }}</h2>
               <div class="mb-2">{{ formatDate(post.created_at) }}</div>
               <p>{{ getExcerpt(post.content, 200) }}</p>
+              <router-link :to="{ name: 'post-detail', params: { slug: post.slug } }">Read more</router-link>
           </article>
 
           <button class="btn btn-primary mr-2" @click="getPosts(pagination.current - 1)" :disabled="pagination.current === 1">
@@ -26,7 +27,7 @@
           </button>
       </div>
       
-      <Loader v-else class="text-center"/>
+      <Loader text="Loading Posts..." v-else class="text-center"/>
   </div>
 </template>
 
