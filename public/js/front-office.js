@@ -2182,6 +2182,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3787,12 +3793,28 @@ var render = function () {
             [
               _c("h1", [_vm._v(_vm._s(_vm.post.title))]),
               _vm._v(" "),
-              _c("h3", [_vm._v("Category: " + _vm._s(_vm.post.category.name))]),
+              _vm.post.category
+                ? _c("h3", [
+                    _vm._v("Category: " + _vm._s(_vm.post.category.name)),
+                  ])
+                : _c("h3", [_vm._v("Uncategorized")]),
               _vm._v(" "),
               _c("Tags", {
                 staticClass: "mb-5",
                 attrs: { list: _vm.post.tags },
               }),
+              _vm._v(" "),
+              _vm.post.cover
+                ? _c("figure", { staticClass: "mb-5" }, [
+                    _c("img", {
+                      attrs: {
+                        width: "600",
+                        src: _vm.post.cover,
+                        alt: _vm.post.title,
+                      },
+                    }),
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("p", [_vm._v(_vm._s(_vm.post.content))]),
             ],

@@ -9,7 +9,7 @@ use App\Post;
 class PostController extends Controller
 {
     public function index(){
-        $posts = Post::paginate(3);
+        $posts = Post::orderBy('id', 'desc')->paginate(3);
 
         return response()->json($posts);
     }
@@ -22,6 +22,8 @@ class PostController extends Controller
         
         if(! $post){
             $post['not_found'] = true;
+        } elseif($post->cover){
+            $post->cover = url('storage/' . $post->cover);
         }
         
         return response()->json($post);

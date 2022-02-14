@@ -3,7 +3,8 @@
         <div v-if="post">
             <h1>{{ post.title }}</h1>
 
-            <h3>Category: {{ post.category.name }}</h3>
+            <h3 v-if="post.category">Category: {{ post.category.name }}</h3>
+            <h3 v-else>Uncategorized</h3>
 
             <!-- <div class="mb-5">
                 <span class="badge badge-primary mr-2" v-for="tag in post.tags" :key="`tag-${tag.id}`">
@@ -11,6 +12,11 @@
                 </span>
             </div> -->
             <Tags class="mb-5" :list=" post.tags "/>
+
+            <figure class="mb-5" v-if="post.cover">
+                <img width="600" :src="post.cover" :alt="post.title">
+            </figure>
+
             <p>{{ post.content }}</p>
         </div>
         <Loader  text="Loading Post..." v-else class="text-center"/>
