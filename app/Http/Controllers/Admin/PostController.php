@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Post;
 use App\Category;
 use App\Tag;
@@ -60,6 +61,11 @@ class PostController extends Controller
         $data = $request->all();
         //dd($data);
 
+        if(array_key_exists('cover', $data)){
+            $img_path = Storage::put('posts-covers', $data['cover']); 
+            $data['cover'] = $img_path;
+        }
+
         $new_post = new Post; 
 
         $slug = Str::slug($data['title'], '-');
@@ -81,6 +87,8 @@ class PostController extends Controller
         }
 
         return redirect()->route('admin.posts.show', $new_post->slug);
+
+
         
     }
 
@@ -146,6 +154,13 @@ class PostController extends Controller
 
         $post = Post::find($id);
 
+        if(array_key_exists('cover', $data)){
+            if($post->cover){
+                Storage::delete($post->cover);
+            }
+            $data['cover'] = Storage::put('posts-covers', $data['cover']);  
+        }
+
         if($data['title'] != $post->title){
             $slug = Str::slug($data['title'], '-');
             $count = 1;
@@ -182,6 +197,10 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
+        if($post->cover){   
+            Storage::delete($post->cover);
+        }
+
         $post->delete();
 
         return redirect()->route('admin.posts.index')->with('deleted',  $post->title);
@@ -193,7 +212,8 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id'=> 'nullable|exists:categories,id',
-            'tags'=> 'nullable|exists:tags,id'
+            'tags'=> 'nullable|exists:tags,id',
+            'cover'=> 'nullable|file|mimes:jpeg,jpg,bmp,png'
         ];
     }
 
